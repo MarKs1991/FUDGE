@@ -51,19 +51,35 @@ var L02FirstFudge;
         L02FirstFudge.viewport.draw();
         f.Debug.log(mainnode);
     }
-    function renderLeftPlayer() {
-        let leftPlayerNode = new f.Node("Player");
+    /*
+    function renderLeftPlayer(): f.Node {
+
+        
+
+        let leftPlayerNode: f.Node = new f.Node("Player");
+
+  
+
         //let cube: f.ComponentMesh = cubenode.getComponent(f.ComponentMesh);
-        let leftPlayerMesh = new f.MeshQuad();
-        let cmpLeftPlayerMesh = new f.ComponentMesh(leftPlayerMesh);
+
+        let leftPlayerMesh: f.MeshQuad = new f.MeshQuad();
+        let cmpLeftPlayerMesh: f.ComponentMesh = new f.ComponentMesh(leftPlayerMesh);
         leftPlayerNode.addComponent(cmpLeftPlayerMesh);
-        let red = new f.Color(1, 1, 0, 1);
+   
+
+        let red: f.Color = new f.Color(1,1,0,1);
+        
         cmpLeftPlayerMesh.pivot.translateX(-20);
-        let mtrSolidRed = new f.Material("SolidRed", f.ShaderUniColor, new f.CoatColored(red));
-        let mtrRedCmp = new f.ComponentMaterial(mtrSolidRed);
+
+        let mtrSolidRed: f.Material = new f.Material("SolidRed", f.ShaderUniColor, new f.CoatColored(red));
+        let mtrRedCmp: f.ComponentMaterial = new f.ComponentMaterial(mtrSolidRed);
         leftPlayerNode.addComponent(mtrRedCmp);
+
         cmpLeftPlayerMesh.pivot.translateY(3);
+
         return leftPlayerNode;
     }
+
+   */
 })(L02FirstFudge || (L02FirstFudge = {}));
 //# sourceMappingURL=Main.js.map

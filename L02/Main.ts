@@ -107,6 +107,7 @@ namespace L02FirstFudge {
 
         f.Debug.log(mainnode);
     }
+    /*
     function renderLeftPlayer(): f.Node {
 
         
@@ -135,6 +136,6 @@ namespace L02FirstFudge {
         return leftPlayerNode;
     }
 
-   
+   */
 
 }
