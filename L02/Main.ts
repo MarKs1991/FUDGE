@@ -2,7 +2,7 @@ namespace L02FirstFudge {
     import f = FudgeCore;
     
     window.addEventListener("load", handleLoad);
-    
+  
     
     export let viewport: f.Viewport;
 
@@ -32,15 +32,40 @@ namespace L02FirstFudge {
 
 
         let camera: f.ComponentCamera = new f.ComponentCamera();
-        //f.Matrix4x4()
+    
+        
 
-       
+        let leftPlayerNode: f.Node = renderLeftPlayer();
+        let rightPlayerNode: f.Node = renderRightPlayer();
+
+        mainnode.appendChild(leftPlayerNode);
+        mainnode.appendChild(rightPlayerNode);
 
         
 
+        camera.pivot.translateZ(40);
+        viewport = new f.Viewport();
+        viewport.initialize("Viewport", mainnode, camera, canvas);
+        
+        
+
+        cmpMesh.pivot.rotateZ(0);
+
+        
+
+        //cubenode.getComponent(f.ComponentMesh)
+
+        
+        viewport.draw();
+
+        f.Debug.log(mainnode);
+    }
+    
+    function renderLeftPlayer(): f.Node {
+  
 
         let leftPlayerNode: f.Node = new f.Node("Player");
-
+  
         //let cube: f.ComponentMesh = cubenode.getComponent(f.ComponentMesh);
 
         let leftPlayerMesh: f.MeshQuad = new f.MeshQuad();
@@ -56,10 +81,13 @@ namespace L02FirstFudge {
         let mtrRedCmp: f.ComponentMaterial = new f.ComponentMaterial(mtrSolidRed);
         leftPlayerNode.addComponent(mtrRedCmp);
 
-        cmpLeftPlayerMesh.pivot.translateY(3);
 
-        
+        return leftPlayerNode;
+    }
 
+
+    function renderRightPlayer(): f.Node {
+  
 
         let rightPlayerNode: f.Node = new f.Node("Player2");
 
@@ -78,64 +106,30 @@ namespace L02FirstFudge {
         let mtrGreenCmp: f.ComponentMaterial = new f.ComponentMaterial(mtrSolidGreen);
         rightPlayerNode.addComponent(mtrGreenCmp);
 
-        cmprightPlayerMesh.pivot.translateY(3);
-
-
-
-
-
-
-        mainnode.appendChild(leftPlayerNode);
-        mainnode.appendChild(rightPlayerNode);
-
-
-        camera.pivot.translateZ(40);
-        viewport = new f.Viewport();
-        viewport.initialize("Viewport", mainnode, camera, canvas);
-   
-        
-
-        cmpMesh.pivot.rotateZ(0);
-
-       
-
-
-        //cubenode.getComponent(f.ComponentMesh)
-
-        
-        viewport.draw();
-
-        f.Debug.log(mainnode);
-    }
-    /*
-    function renderLeftPlayer(): f.Node {
-
-        
-
-        let leftPlayerNode: f.Node = new f.Node("Player");
-
-  
-
-        //let cube: f.ComponentMesh = cubenode.getComponent(f.ComponentMesh);
-
-        let leftPlayerMesh: f.MeshQuad = new f.MeshQuad();
-        let cmpLeftPlayerMesh: f.ComponentMesh = new f.ComponentMesh(leftPlayerMesh);
-        leftPlayerNode.addComponent(cmpLeftPlayerMesh);
-   
-
-        let red: f.Color = new f.Color(1,1,0,1);
-        
-        cmpLeftPlayerMesh.pivot.translateX(-20);
-
-        let mtrSolidRed: f.Material = new f.Material("SolidRed", f.ShaderUniColor, new f.CoatColored(red));
-        let mtrRedCmp: f.ComponentMaterial = new f.ComponentMaterial(mtrSolidRed);
-        leftPlayerNode.addComponent(mtrRedCmp);
-
-        cmpLeftPlayerMesh.pivot.translateY(3);
-
-        return leftPlayerNode;
+    return rightPlayerNode;
     }
 
-   */
+
+    window.addEventListener("keydown", event => {
+        if (event.isComposing || event.keyCode === 87) {
+
+            
+
+           // let rightPlayerNode: f.Node[] = mainnode.getChildrenByName("rightPlayerNode");
+
+           // let rightPlayerNodeSingle: f.Node  = rightPlayerNode[0];
+
+           // let mesh : f.ComponentMesh = rightPlayerNode.getComponent(rightPlayerNodeSingle);
+
+
+
+
+            f.Debug.log(mainnode);
+         
+        }
+        // do something
+      });
+
+   
 
 }
