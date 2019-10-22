@@ -49,6 +49,9 @@ namespace L02FirstFudge {
         
        
 
+        mainnode.appendChild(leftPlayerNode);
+        mainnode.appendChild(rightPlayerNode);
+
         
         //let cmpTransform = leftPlayerNode.getComponent(f.ComponentTransform);
         
@@ -124,15 +127,16 @@ namespace L02FirstFudge {
         let mtrGreenCmp: f.ComponentMaterial = new f.ComponentMaterial(mtrSolidGreen);
         rightPlayerNode.addComponent(mtrGreenCmp);
 
-        let cmpTransform: f.ComponentTransform = new f.ComponentTransform();
-        rightPlayerNode.addComponent(cmpTransform);
         cmpTransform.local.translateX(20);
+        rightPlayerNode.addComponent(cmpTransform);
+        let cmpTransform: f.ComponentTransform = new f.ComponentTransform();
 
         (<f.ComponentMesh>rightPlayerNode.getComponent(f.ComponentMesh)).pivot.scaleY(3);
 
         return rightPlayerNode;
     }
 
+            
 
     window.addEventListener("keydown", event => {
         if (event.keyCode === 87) {
