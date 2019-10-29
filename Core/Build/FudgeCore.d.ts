@@ -664,6 +664,7 @@ declare namespace FudgeCore {
         static decorateCoat(_constructor: Function): void;
         private static injectRenderDataForCoatColored;
         private static injectRenderDataForCoatTextured;
+        private static injectRenderDataForCoatMatCap;
     }
 }
 declare namespace FudgeCore {
@@ -813,6 +814,16 @@ declare namespace FudgeCore {
         tilingX: number;
         tilingY: number;
         repetition: boolean;
+    }
+    /**
+     * A [[Coat]] to be used by the MatCap Shader providing a texture, a tint color (0.5 grey is neutral)
+     * and a flatMix number for mixing between smooth and flat shading.
+     */
+    class CoatMatCap extends Coat {
+        texture: TextureImage;
+        tintColor: Color;
+        flatMix: number;
+        constructor(_texture?: TextureImage, _tintcolor?: Color, _flatmix?: number);
     }
 }
 declare namespace FudgeCore {
@@ -1814,12 +1825,6 @@ declare namespace FudgeCore {
     }
 }
 declare namespace FudgeCore {
-    interface Rectangle {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-    }
     interface Border {
         left: number;
         top: number;
@@ -2029,6 +2034,20 @@ declare namespace FudgeCore {
         getMutatorAttributeTypes(_mutator: Mutator): MutatorAttributeTypes;
         protected reduceMutator(_mutator: Mutator): void;
         private resetCache;
+    }
+}
+declare namespace FudgeCore {
+    class Rectangle extends Mutable {
+        position: Vector2;
+        size: Vector2;
+        constructor(_x?: number, _y?: number, _width?: number, _height?: number);
+        static get(_x?: number, _y?: number, _width?: number, _height?: number): Rectangle;
+        setPositionAndSize(_x?: number, _y?: number, _width?: number, _height?: number): void;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        protected reduceMutator(_mutator: Mutator): void;
     }
 }
 declare namespace FudgeCore {
@@ -2643,6 +2662,18 @@ declare namespace FudgeCore {
      * @authors Jascha Karagöl, HFU, 2019 | Jirka Dell'Oro-Friedl, HFU, 2019
      */
     class ShaderFlat extends Shader {
+        static getCoat(): typeof Coat;
+        static getVertexShaderSource(): string;
+        static getFragmentShaderSource(): string;
+    }
+}
+declare namespace FudgeCore {
+    /**
+     * Matcap (Material Capture) shading. The texture provided by the coat is used as a matcap material.
+     * Implementation based on https://www.clicktorelease.com/blog/creating-spherical-environment-mapping-shader/
+     * @authors Simon Storl-Schulke, HFU, 2019 | Jirka Dell'Oro-Friedl, HFU, 2019
+     */
+    class ShaderMatCap extends Shader {
         static getCoat(): typeof Coat;
         static getVertexShaderSource(): string;
         static getFragmentShaderSource(): string;
