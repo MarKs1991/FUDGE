@@ -127,9 +127,9 @@ namespace L02FirstFudge {
         let mtrGreenCmp: f.ComponentMaterial = new f.ComponentMaterial(mtrSolidGreen);
         rightPlayerNode.addComponent(mtrGreenCmp);
 
-        cmpTransform.local.translateX(20);
-        rightPlayerNode.addComponent(cmpTransform);
-        let cmpTransform: f.ComponentTransform = new f.ComponentTransform();
+        //cmpTransform.local.translateX(20);
+        //rightPlayerNode.addComponent(cmpTransform);
+        //let cmpTransform: f.ComponentTransform = new f.ComponentTransform();
 
         (<f.ComponentMesh>rightPlayerNode.getComponent(f.ComponentMesh)).pivot.scaleY(3);
 
