@@ -1,207 +1,121 @@
-namespace L02FirstFudge {
-    import f = FudgeCore;
-    
-    window.addEventListener("load", handleLoad);
-  
-    
-    export let viewport: f.Viewport;
+namespace L04_PongAnimated {
 
-    let mainnode: f.Node = new f.Node("Main");
-    let cubenode: f.Node = new f.Node("Ball");
-    let rightPlayerNode: f.Node = new f.Node("Player1");
-    let leftPlayerNode: f.Node = new f.Node("Player2");
+  interface KeyPressed {
+      [code: string]: boolean;
+  }
 
+  import f = FudgeCore;
+  let keysPressed: KeyPressed = {};
 
-    function handleLoad(): void {
-        
-        //let cubenode: f.Node = new f.Node("Ball");
-   
-        mainnode.appendChild(cubenode);
+  window.addEventListener("load", hndLoad);
+  let viewport: f.Viewport;
 
-        const canvas: HTMLCanvasElement = document.querySelector("canvas");
-        f.RenderManager.initialize();
+  let ball: f.Node = new f.Node("Ball");
+  let paddleLeft: f.Node = new f.Node("PaddleLeft");
+  let paddleRight: f.Node = new f.Node("PaddleRight");
 
-        let mesh: f.MeshQuad = new f.MeshQuad();
-        let cmpMesh: f.ComponentMesh = new f.ComponentMesh(mesh);
-        cubenode.addComponent(cmpMesh);
-   
-        cmpMesh.pivot.translateX(1);
-       
-        let white: f.Color = new f.Color(1,1,1,1);
+  let ballSpeed: f.Vector3 = new f.Vector3(0.2, -0.1, 0);
 
-        let mtrSolidWhite: f.Material = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(white));
-        let mtrCmp: f.ComponentMaterial = new f.ComponentMaterial(mtrSolidWhite);
-        cubenode.addComponent(mtrCmp);
+  function hndLoad(_event: Event): void {
+      const canvas: HTMLCanvasElement = document.querySelector("canvas");
+      f.RenderManager.initialize();
+      f.Debug.log(canvas);
+
+      let pong: f.Node = createPong();
+
+      let cmpCamera: f.ComponentCamera = new f.ComponentCamera();
+      cmpCamera.pivot.translateZ(42);
 
 
-        let camera: f.ComponentCamera = new f.ComponentCamera();
-    
-        
+      paddleRight.cmpTransform.local.translateX(20);
+      paddleLeft.cmpTransform.local.translateX(-20);
+      paddleLeft.getComponent(f.ComponentMesh).pivot.scaleY(4);
+      paddleRight.getComponent(f.ComponentMesh).pivot.scaleY(4);
 
-        leftPlayerNode = renderLeftPlayer();
-        rightPlayerNode = renderRightPlayer();
+      viewport = new f.Viewport();
+      viewport.initialize("Viewport", pong, cmpCamera, canvas);
+      f.Debug.log(viewport);
 
-        mainnode.appendChild(leftPlayerNode);
-        mainnode.appendChild(rightPlayerNode);
+      document.addEventListener("keydown", hndKeydown);
+      document.addEventListener("keyup", hndKeyup);
+
+      viewport.draw();
+
+      // setInterval(handler, milliseconds);
+      // requestAnimationFrame(handler);
+      f.Loop.addEventListener(f.EVENT.LOOP_FRAME, update);
+      f.Loop.start();
+  }
+
+  function update(_event: Event): void {
+
+      if (keysPressed[f.KEYBOARD_CODE.ARROW_UP])
+          paddleRight.cmpTransform.local.translate(new f.Vector3(0, 0.3, 0));
+      if (keysPressed[f.KEYBOARD_CODE.ARROW_DOWN])
+          paddleRight.cmpTransform.local.translate(f.Vector3.Y(-0.3));
+      if (keysPressed[f.KEYBOARD_CODE.W])
+          paddleLeft.cmpTransform.local.translate(new f.Vector3(0, 0.3, 0));
+      if (keysPressed[f.KEYBOARD_CODE.S])
+          paddleLeft.cmpTransform.local.translate(f.Vector3.Y(-0.3));
+
+      moveBall();
+
+      detectHit(ball.cmpTransform.local.translation, paddleRight.cmpTransform.local.translation);
+      f.RenderManager.update();
+      viewport.draw();
+  }
+
+  function detectHit(_ballPos: f.Vector3, paddlePos: f.Vector3): void
+  {  
+      let topLeft: f.Vector3 = (new f.Vector3(paddlePos.x - paddleRight.cmpTransform.local.scaling.x, paddlePos.y + paddleRight.cmpTransform.local.scaling.y, 0));
+      let bottomRight: f.Vector3 = (new f.Vector3(paddlePos.x + paddleRight.cmpTransform.local.scaling.x, paddlePos.y - paddleRight.cmpTransform.local.scaling.y, 0));
+
 
       
-        //let cmpTransform : f.ComponentTransform = new f.ComponentTransform();
-        
-       
 
-        mainnode.appendChild(leftPlayerNode);
-        mainnode.appendChild(rightPlayerNode);
-
-        
-        //let cmpTransform = leftPlayerNode.getComponent(f.ComponentTransform);
-        
-        //f.Debug.log(cmpTransform);
-
-        camera.pivot.translateZ(40);
-        viewport = new f.Viewport();
-        viewport.initialize("Viewport", mainnode, camera, canvas);
-        
-        
-
-        cmpMesh.pivot.rotateZ(0);
-
-        let testnode: f.Node[] = mainnode.getChildren();
-        f.Debug.log(testnode);
-        //cubenode.getComponent(f.ComponentMesh)
-
-        
-        viewport.draw();
-
-        f.Debug.log(mainnode);
-    }
-    
-    function renderLeftPlayer(): f.Node {
-  
-        //let leftPlayerNode: f.Node = new f.Node("Player1");
-  
-        //let cube: f.ComponentMesh = cubenode.getComponent(f.ComponentMesh);
-
-        let leftPlayerMesh: f.MeshQuad = new f.MeshQuad();
-        let cmpLeftPlayerMesh: f.ComponentMesh = new f.ComponentMesh(leftPlayerMesh);
-        leftPlayerNode.addComponent(cmpLeftPlayerMesh);
-   
-
-        let red: f.Color = new f.Color(1,0,0,1);
-        
-        //cmpLeftPlayerMesh.pivot.translateX(-20);
-
-        let mtrSolidRed: f.Material = new f.Material("SolidRed", f.ShaderUniColor, new f.CoatColored(red));
-        let mtrRedCmp: f.ComponentMaterial = new f.ComponentMaterial(mtrSolidRed);
-        leftPlayerNode.addComponent(mtrRedCmp);
-
-
-        //f.Debug.log(leftPlayerNode.cmpTransform.local);
-
-        (<f.ComponentMesh>leftPlayerNode.getComponent(f.ComponentMesh)).pivot.scaleY(3);
-
-        let cmpTransform: f.ComponentTransform = new f.ComponentTransform();
-        leftPlayerNode.addComponent(cmpTransform);
-        cmpTransform.local.translateX(-20);
-
-        return leftPlayerNode;
-    }
-
-
-    function renderRightPlayer(): f.Node {
-  
-
-        //let rightPlayerNode: f.Node = new f.Node("Player2");
-
-        //let cube: f.ComponentMesh = cubenode.getComponent(f.ComponentMesh);
-
-        let rightPlayerMesh: f.MeshQuad = new f.MeshQuad();
-        let cmprightPlayerMesh: f.ComponentMesh = new f.ComponentMesh(rightPlayerMesh);
-        rightPlayerNode.addComponent(cmprightPlayerMesh);
-   
-
-        let green: f.Color = new f.Color(0,1,0,1);
-        
-        //cmprightPlayerMesh.pivot.translateX(20);
-
-        let mtrSolidGreen: f.Material = new f.Material("SolidGreen", f.ShaderUniColor, new f.CoatColored(green));
-        let mtrGreenCmp: f.ComponentMaterial = new f.ComponentMaterial(mtrSolidGreen);
-        rightPlayerNode.addComponent(mtrGreenCmp);
-
-        //cmpTransform.local.translateX(20);
-        //rightPlayerNode.addComponent(cmpTransform);
-        //let cmpTransform: f.ComponentTransform = new f.ComponentTransform();
-
-        (<f.ComponentMesh>rightPlayerNode.getComponent(f.ComponentMesh)).pivot.scaleY(3);
-
-        return rightPlayerNode;
-    }
-
-            
-
-    window.addEventListener("keydown", event => {
-        if (event.keyCode === 87) {
-
-            //let movingNode: f.Node[] = mainnode.getChildrenByName("Player1");
-           //   let comp: f.Component[] = movingNode[0].getAllComponents();
-            //f.Debug.log(comp);
-          let mesh: f.ComponentMesh = rightPlayerNode.getComponent(f.ComponentMesh);
-
-          mesh.pivot.translateY(1);
-            rightPlayerNode.cmpTransform.local.translateY(2);
-          //let node: f.Node[] = mainnode.getChildren("leftPlayerNode");
+      if(_ballPos >= topLeft && _ballPos <= bottomRight)
+      {
+        f.Debug.log(topLeft.x);
+        f.Debug.log(topLeft.y);
 
           
-          //node[0].getComponents()
-            viewport.draw();
-
-
-
-            f.Debug.log("leftPlayerNode");
-
-         
-        }
-        // do something
-      });
-
-    window.addEventListener("keydown", event => {
-        if (event.keyCode === 83) {
-
-        
-        let mesh: f.ComponentMesh = rightPlayerNode.getComponent(f.ComponentMesh);
-
-        mesh.pivot.translateY(-1);
-        rightPlayerNode.cmpTransform.local.translateY(-1);
-    
-        viewport.draw();
-
-        f.Debug.log("leftPlayerNode");
-
-         
-        }
-        // do something
-      });
-      
-    
-
-/*
-      function createPong(): void
-      {
-
-        let pong: f.Node = new f.Node("Pong");
-        let ball: f.Node = new f.Node("Ball");
-        let leftPaddle: f.Node = new f.Node("leftPaddle");
-        let rightPaddle: f.Node = new f.Node("rightPaddle");
-
-        let BallMesh: f.MeshQuad = new f.MeshQuad();
-        let leftPaddleMesh: f.MeshQuad = new f.MeshQuad();
-        let rightPaddleMesh: f.MeshQuad = new f.MeshQuad();
-
-        let cmpBallMesh: f.ComponentMesh = new f.ComponentMesh(BallMesh);
-        
-        pong.addComponent(cmpBallMesh);
-
-
       }
-   */
 
+  }
+
+  function moveBall(): void {
+      ball.cmpTransform.local.translate(ballSpeed);
+  }
+
+  function hndKeyup(_event: KeyboardEvent): void {
+      keysPressed[_event.code] = false;
+  }
+  function hndKeydown(_event: KeyboardEvent): void {
+      keysPressed[_event.code] = true;
+  }
+
+  function createPong(): f.Node {
+      let pong: f.Node = new f.Node("Pong");
+
+      let mtrSolidWhite: f.Material = new f.Material("SolidWhite", f.ShaderUniColor, new f.CoatColored(f.Color.WHITE));
+      let meshQuad: f.MeshQuad = new f.MeshQuad();
+
+      ball.addComponent(new f.ComponentMesh(meshQuad));
+      paddleLeft.addComponent(new f.ComponentMesh(meshQuad));
+      paddleRight.addComponent(new f.ComponentMesh(meshQuad));
+
+      ball.addComponent(new f.ComponentMaterial(mtrSolidWhite));
+      paddleLeft.addComponent(new f.ComponentMaterial(mtrSolidWhite));
+      paddleRight.addComponent(new f.ComponentMaterial(mtrSolidWhite));
+
+      ball.addComponent(new f.ComponentTransform());
+      paddleLeft.addComponent(new f.ComponentTransform());
+      paddleRight.addComponent(new f.ComponentTransform());
+
+      pong.appendChild(ball);
+      pong.appendChild(paddleLeft);
+      pong.appendChild(paddleRight);
+
+      return pong;
+  }
 }
