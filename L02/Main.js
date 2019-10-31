@@ -8,7 +8,7 @@ var L04_PongAnimated;
     let ball = new f.Node("Ball");
     let paddleLeft = new f.Node("PaddleLeft");
     let paddleRight = new f.Node("PaddleRight");
-    let ballSpeed = new f.Vector3(0.2, -0.1, 0);
+    let ballSpeed = new f.Vector3(0.1, 0, 0);
     function hndLoad(_event) {
         const canvas = document.querySelector("canvas");
         f.RenderManager.initialize();
@@ -41,20 +41,37 @@ var L04_PongAnimated;
         if (keysPressed[f.KEYBOARD_CODE.S])
             paddleLeft.cmpTransform.local.translate(f.Vector3.Y(-0.3));
         moveBall();
-        detectHit(ball.cmpTransform.local.translation, paddleRight.cmpTransform.local.translation);
+        //ball.cmpTransform.local.translation = new f.Vector3(20,5,0);
+        if (detectHit(ball.cmpTransform.local.translation, paddleRight.cmpTransform.local)) {
+            f.Debug.log("right");
+            ballSpeed.x * -1;
+            ballSpeed.y * -1;
+        }
+        else if (detectHit(ball.cmpTransform.local.translation, paddleLeft.cmpTransform.local)) {
+            f.Debug.log("left");
+        }
         f.RenderManager.update();
         viewport.draw();
     }
     function detectHit(_ballPos, paddlePos) {
-        let topLeft = (new f.Vector3(paddlePos.x - paddleRight.cmpTransform.local.scaling.x, paddlePos.y + paddleRight.cmpTransform.local.scaling.y, 0));
-        let bottomRight = (new f.Vector3(paddlePos.x + paddleRight.cmpTransform.local.scaling.x, paddlePos.y - paddleRight.cmpTransform.local.scaling.y, 0));
-        if (_ballPos >= topLeft && _ballPos <= bottomRight) {
-            f.Debug.log(topLeft.x);
-            f.Debug.log(topLeft.y);
+        let topLeft = (new f.Vector3(paddlePos.translation.x - paddlePos.scaling.x, paddlePos.translation.y + paddlePos.scaling.y, 0));
+        let bottomRight = (new f.Vector3(paddlePos.translation.x + paddlePos.scaling.x, paddlePos.translation.y - paddlePos.scaling.y, 0));
+        //f.Debug.log("tx: " + topLeft.x + "ty: " + topLeft.y + "bx: " + bottomRight.x + "by: " + bottomRight.y);
+        //f.Debug.log(_ballPos.x + "      " + _ballPos.y)
+        if (_ballPos.x > topLeft.x && _ballPos.y < topLeft.y) {
+            if (_ballPos.x < bottomRight.x && _ballPos.x > bottomRight.y) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return false;
         }
     }
     function moveBall() {
-        ball.cmpTransform.local.translate(ballSpeed);
+        ball.cmpTransform.local.translate(new f.Vector3(ballSpeed.x, ballSpeed.y, ballSpeed.z));
     }
     function hndKeyup(_event) {
         keysPressed[_event.code] = false;
