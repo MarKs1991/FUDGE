@@ -20,7 +20,7 @@ namespace L04_PongAnimated {
     let yellow: f.Color = new f.Color(1, 0, 1, 0);
 
 
-    let ballSpeed: f.Vector3 = new f.Vector3(-.2, .2, 0);
+    let ballSpeed: f.Vector3 = new f.Vector3(.2, .2, 0);
 
     function hndLoad(_event: Event): void {
         const canvas: HTMLCanvasElement = document.querySelector("canvas");
@@ -81,30 +81,115 @@ namespace L04_PongAnimated {
         // ball.cmpTransform.local.translation = new f.Vector3(20,5,0);
 
         if (detectHit(ball.cmpTransform.local.translation, paddleRight.cmpTransform.local)) {
-            ballSpeed.x = ballSpeed.x * - 1;
-            green.r = Math.random();
-            green.g = Math.random();
-            green.b = Math.random();
+            if(ball.cmpTransform.local.translation.x >= 0 && ball.cmpTransform.local.translation.x <= 4)
+            {
+                ballSpeed.x = (ballSpeed.x * .6) * - 1;
+                f.Debug.log("MitteR");
+            }
+            else if(ball.cmpTransform.local.translation.y >= 0 && ball.cmpTransform.local.translation.y <= -4)
+            {
+                ballSpeed.x = (ballSpeed.x * .6) * - 1;
+                f.Debug.log("MitteL");
+            }
+            else if(ball.cmpTransform.local.translation.y >= 4 && ball.cmpTransform.local.translation.y <= 8)
+            {
+                ballSpeed.x = (ballSpeed.x * 1) * - 1;
+                f.Debug.log("a1r");
+            }
+            else if(ball.cmpTransform.local.translation.y >= -4 && ball.cmpTransform.local.translation.y <= -8)
+            {
+                ballSpeed.x = (ballSpeed.x * 1) * - 1;
+                f.Debug.log("a1l");
+            }
+            else if(ball.cmpTransform.local.translation.y >= 8 && ball.cmpTransform.local.translation.y <= 12)
+            {
+                ballSpeed.x = (ballSpeed.x * 1.4) * - 1;
+                f.Debug.log("a2r");
+            }
+            else if(ball.cmpTransform.local.translation.y >= -8 && ball.cmpTransform.local.translation.y <= -12)
+            {
+                ballSpeed.x = (ballSpeed.x * 1.4) * - 1;
+                f.Debug.log("a2l");
+            }
+            else if(ball.cmpTransform.local.translation.y >= 12 && ball.cmpTransform.local.translation.y <= 20)
+            {
+                ballSpeed.x = (ballSpeed.x * 1.4) * - 1;
+                f.Debug.log("a3r");
+            }
+            else if(ball.cmpTransform.local.translation.y >= -12 && ball.cmpTransform.local.translation.y <= -20)
+            {
+                ballSpeed.x = (ballSpeed.x * 1.4) * - 1;
+                f.Debug.log("a3l");
+            }
+            else{
+            ballSpeed.x = (ballSpeed.x * 1.0) * - 1;
+            f.Debug.log("es");
+            }
         }
         if (detectHit(ball.cmpTransform.local.translation, paddleLeft.cmpTransform.local)) {
             ballSpeed.x = ballSpeed.x * - 1;
-            red.r = Math.random();
-            red.g = Math.random();
-            red.b = Math.random();
+            //red.r = Math.random();
+            //red.g = Math.random();
+            //red.b = Math.random();
         }
 
 
         if (inPlayArea(ball.cmpTransform.local.translation, playArea.cmpTransform.local) == false 
         && ball.cmpTransform.local.translation.y > 14 || ball.cmpTransform.local.translation.y < -14) {
             //ballSpeed.x = ballSpeed.x * Math.random();
-            ballSpeed.y = ballSpeed.y * - 1;
+
+            if(ball.cmpTransform.local.translation.x >= 0 && ball.cmpTransform.local.translation.x <= 7)
+            {
+                ballSpeed.y = (ballSpeed.y * .6) * - 1;
+                f.Debug.log("MitteR");
+            }
+            else if(ball.cmpTransform.local.translation.x >= 0 && ball.cmpTransform.local.translation.x <= -7)
+            {
+                ballSpeed.y = (ballSpeed.y * .6) * - 1;
+                f.Debug.log("MitteL");
+            }
+            else if(ball.cmpTransform.local.translation.x >= 7 && ball.cmpTransform.local.translation.x <= 14)
+            {
+                ballSpeed.y = (ballSpeed.y * 1) * - 1;
+                f.Debug.log("a1r");
+            }
+            else if(ball.cmpTransform.local.translation.x >= -7 && ball.cmpTransform.local.translation.x <= -14)
+            {
+                ballSpeed.y = (ballSpeed.y * 1) * - 1;
+                f.Debug.log("a1l");
+            }
+            else if(ball.cmpTransform.local.translation.x >= 14 && ball.cmpTransform.local.translation.x <= 21)
+            {
+                ballSpeed.y = (ballSpeed.y * 1.4) * - 1;
+                f.Debug.log("a2r");
+            }
+            else if(ball.cmpTransform.local.translation.x >= -14 && ball.cmpTransform.local.translation.x <= -21)
+            {
+                ballSpeed.y = (ballSpeed.y * 1.4) * - 1;
+                f.Debug.log("a2l");
+            }
+            else if(ball.cmpTransform.local.translation.x >= 21 && ball.cmpTransform.local.translation.x <= 30)
+            {
+                ballSpeed.y = (ballSpeed.y * 1.4) * - 1;
+                f.Debug.log("a3r");
+            }
+            else if(ball.cmpTransform.local.translation.x >= -21 && ball.cmpTransform.local.translation.x <= -30)
+            {
+                ballSpeed.y = (ballSpeed.y * 1.4) * - 1;
+                f.Debug.log("a3l");
+            }
+            else{
+            ballSpeed.y = (ballSpeed.y * 1.0) * - 1;
+            f.Debug.log("es");
+            }
         }
 
         if (inPlayArea(ball.cmpTransform.local.translation, playArea.cmpTransform.local) == false 
         && ball.cmpTransform.local.translation.x > 21 || ball.cmpTransform.local.translation.x < -21) {
-            //ballSpeed.x = ballSpeed.x * - 1;
-            ballSpeed.y = ballSpeed.y * Math.random();
+            ballSpeed.x = ballSpeed.x * - 1;
         }
+
+       
 
 
         f.RenderManager.update();
