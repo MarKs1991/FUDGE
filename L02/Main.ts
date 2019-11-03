@@ -15,6 +15,15 @@ namespace L04_PongAnimated {
     let paddleRight: f.Node = new f.Node("PaddleRight");
     let playArea: f.Node = new f.Node("Playarea");
 
+
+    let scoreLeftPlayer: number = 0;
+    let scoreRightPlayer: number = 0;
+
+    let t0 = 10;
+    let t1 = 10;
+    let blocked = false;
+
+
     let red: f.Color = new f.Color(1, 0, 0, 0);
     let green: f.Color = new f.Color(0, 1, 0, 0);
     let yellow: f.Color = new f.Color(1, 0, 1, 0);
@@ -62,139 +71,139 @@ namespace L04_PongAnimated {
     }
 
     function update(_event: Event): void {
+       
 
-        if (keysPressed[f.KEYBOARD_CODE.ARROW_UP]) 
-            paddleRight.cmpTransform.local.translate(new f.Vector3(0, 0.3, 0));
-        
-        if (keysPressed[f.KEYBOARD_CODE.ARROW_DOWN]) 
-            paddleRight.cmpTransform.local.translate(f.Vector3.Y(-0.3));
-        
-        if (keysPressed[f.KEYBOARD_CODE.W]) 
-            paddleLeft.cmpTransform.local.translate(new f.Vector3(0, 0.3, 0));
-        
-        if (keysPressed[f.KEYBOARD_CODE.S]) 
-            paddleLeft.cmpTransform.local.translate(f.Vector3.Y(-0.3));
-        
-
-
+        KeyboardInput();
         moveBall();
-        // ball.cmpTransform.local.translation = new f.Vector3(20,5,0);
 
         if (detectHit(ball.cmpTransform.local.translation, paddleRight.cmpTransform.local)) {
-            if(ball.cmpTransform.local.translation.x >= 0 && ball.cmpTransform.local.translation.x <= 4)
-            {
+            if (ball.cmpTransform.local.translation.x >= 0 && ball.cmpTransform.local.translation.x <= 4) {
                 ballSpeed.x = (ballSpeed.x * .6) * - 1;
                 f.Debug.log("MitteR");
-            }
-            else if(ball.cmpTransform.local.translation.y >= 0 && ball.cmpTransform.local.translation.y <= -4)
-            {
+            } else if (ball.cmpTransform.local.translation.y >= 0 && ball.cmpTransform.local.translation.y <= -4) {
                 ballSpeed.x = (ballSpeed.x * .6) * - 1;
                 f.Debug.log("MitteL");
-            }
-            else if(ball.cmpTransform.local.translation.y >= 4 && ball.cmpTransform.local.translation.y <= 8)
-            {
+            } else if (ball.cmpTransform.local.translation.y >= 4 && ball.cmpTransform.local.translation.y <= 8) {
                 ballSpeed.x = (ballSpeed.x * 1) * - 1;
                 f.Debug.log("a1r");
-            }
-            else if(ball.cmpTransform.local.translation.y >= -4 && ball.cmpTransform.local.translation.y <= -8)
-            {
+            } else if (ball.cmpTransform.local.translation.y >= -4 && ball.cmpTransform.local.translation.y <= -8) {
                 ballSpeed.x = (ballSpeed.x * 1) * - 1;
                 f.Debug.log("a1l");
-            }
-            else if(ball.cmpTransform.local.translation.y >= 8 && ball.cmpTransform.local.translation.y <= 12)
-            {
+            } else if (ball.cmpTransform.local.translation.y >= 8 && ball.cmpTransform.local.translation.y <= 12) {
                 ballSpeed.x = (ballSpeed.x * 1.4) * - 1;
                 f.Debug.log("a2r");
-            }
-            else if(ball.cmpTransform.local.translation.y >= -8 && ball.cmpTransform.local.translation.y <= -12)
-            {
+            } else if (ball.cmpTransform.local.translation.y >= -8 && ball.cmpTransform.local.translation.y <= -12) {
                 ballSpeed.x = (ballSpeed.x * 1.4) * - 1;
                 f.Debug.log("a2l");
-            }
-            else if(ball.cmpTransform.local.translation.y >= 12 && ball.cmpTransform.local.translation.y <= 20)
-            {
+            } else if (ball.cmpTransform.local.translation.y >= 12 && ball.cmpTransform.local.translation.y <= 20) {
                 ballSpeed.x = (ballSpeed.x * 1.4) * - 1;
                 f.Debug.log("a3r");
-            }
-            else if(ball.cmpTransform.local.translation.y >= -12 && ball.cmpTransform.local.translation.y <= -20)
-            {
+            } else if (ball.cmpTransform.local.translation.y >= -12 && ball.cmpTransform.local.translation.y <= -20) {
                 ballSpeed.x = (ballSpeed.x * 1.4) * - 1;
                 f.Debug.log("a3l");
-            }
-            else{
-            ballSpeed.x = (ballSpeed.x * 1.0) * - 1;
-            f.Debug.log("es");
+            } else {
+                ballSpeed.x = (ballSpeed.x * 1.0) * - 1;
+                f.Debug.log("es");
             }
         }
         if (detectHit(ball.cmpTransform.local.translation, paddleLeft.cmpTransform.local)) {
             ballSpeed.x = ballSpeed.x * - 1;
-            //red.r = Math.random();
-            //red.g = Math.random();
-            //red.b = Math.random();
+            // red.r = Math.random();
+            // red.g = Math.random();
+            // red.b = Math.random();
         }
 
 
-        if (inPlayArea(ball.cmpTransform.local.translation, playArea.cmpTransform.local) == false 
-        && ball.cmpTransform.local.translation.y > 14 || ball.cmpTransform.local.translation.y < -14) {
-            //ballSpeed.x = ballSpeed.x * Math.random();
+        if (inPlayArea(ball.cmpTransform.local.translation, playArea.cmpTransform.local) == false && ball.cmpTransform.local.translation.y > 14 || ball.cmpTransform.local.translation.y < -14) { // ballSpeed.x = ballSpeed.x * Math.random();
 
-            if(ball.cmpTransform.local.translation.x >= 0 && ball.cmpTransform.local.translation.x <= 7)
-            {
+            if (ball.cmpTransform.local.translation.x >= 0 && ball.cmpTransform.local.translation.x <= 7 && !blocked) {
                 ballSpeed.y = (ballSpeed.y * .6) * - 1;
                 f.Debug.log("MitteR");
-            }
-            else if(ball.cmpTransform.local.translation.x >= 0 && ball.cmpTransform.local.translation.x <= -7)
-            {
-                ballSpeed.y = (ballSpeed.y * .6) * - 1;
+                isBlocked();
+            } else if (ball.cmpTransform.local.translation.x <= 0 && ball.cmpTransform.local.translation.x <= -7 && !blocked) {
+                ballSpeed.y = (ballSpeed.y   * .6) * - 1;
                 f.Debug.log("MitteL");
-            }
-            else if(ball.cmpTransform.local.translation.x >= 7 && ball.cmpTransform.local.translation.x <= 14)
-            {
+                isBlocked();
+            } else if (ball.cmpTransform.local.translation.x >= 7 && ball.cmpTransform.local.translation.x <= 14 && !blocked) {
                 ballSpeed.y = (ballSpeed.y * 1) * - 1;
                 f.Debug.log("a1r");
-            }
-            else if(ball.cmpTransform.local.translation.x >= -7 && ball.cmpTransform.local.translation.x <= -14)
-            {
+                isBlocked();
+            } else if (ball.cmpTransform.local.translation.x <= -7 && ball.cmpTransform.local.translation.x <= -14 && !blocked) {
                 ballSpeed.y = (ballSpeed.y * 1) * - 1;
                 f.Debug.log("a1l");
-            }
-            else if(ball.cmpTransform.local.translation.x >= 14 && ball.cmpTransform.local.translation.x <= 21)
-            {
-                ballSpeed.y = (ballSpeed.y * 1.4) * - 1;
+                isBlocked();
+            } else if (ball.cmpTransform.local.translation.x >= 14 && ball.cmpTransform.local.translation.x <= 21 && !blocked) {
+                ballSpeed.y = (ballSpeed.y * 1.1) * - 1;
                 f.Debug.log("a2r");
-            }
-            else if(ball.cmpTransform.local.translation.x >= -14 && ball.cmpTransform.local.translation.x <= -21)
-            {
-                ballSpeed.y = (ballSpeed.y * 1.4) * - 1;
+                isBlocked();
+            } else if (ball.cmpTransform.local.translation.x <= -14 && ball.cmpTransform.local.translation.x <= -21 && !blocked) {
+                ballSpeed.y = (ballSpeed.y * 1.1) * - 1;
                 f.Debug.log("a2l");
-            }
-            else if(ball.cmpTransform.local.translation.x >= 21 && ball.cmpTransform.local.translation.x <= 30)
-            {
-                ballSpeed.y = (ballSpeed.y * 1.4) * - 1;
+                isBlocked();
+            } else if (ball.cmpTransform.local.translation.x >= 21 && ball.cmpTransform.local.translation.x <= 40 && !blocked) {
+                ballSpeed.y = (ballSpeed.y * 1.2) * - 1;
                 f.Debug.log("a3r");
-            }
-            else if(ball.cmpTransform.local.translation.x >= -21 && ball.cmpTransform.local.translation.x <= -30)
-            {
-                ballSpeed.y = (ballSpeed.y * 1.4) * - 1;
+                isBlocked();
+            } else if (ball.cmpTransform.local.translation.x <= -21 && ball.cmpTransform.local.translation.x <= -40 && !blocked) {
+                ballSpeed.y = (ballSpeed.y * 1.2) * - 1;
                 f.Debug.log("a3l");
-            }
-            else{
-            ballSpeed.y = (ballSpeed.y * 1.0) * - 1;
-            f.Debug.log("es");
+                isBlocked();
+            } else {
+                //ballSpeed.y = (ballSpeed.y * 1.0) * - 1;
+                //f.Debug.log("es");
+                isBlocked();
             }
         }
 
-        if (inPlayArea(ball.cmpTransform.local.translation, playArea.cmpTransform.local) == false 
-        && ball.cmpTransform.local.translation.x > 21 || ball.cmpTransform.local.translation.x < -21) {
+        t1 = performance.now();
+
+        if (inPlayArea(ball.cmpTransform.local.translation, playArea.cmpTransform.local) == false && ball.cmpTransform.local.translation.x > 21 || ball.cmpTransform.local.translation.x < -21) {
             ballSpeed.x = ballSpeed.x * - 1;
-        }
+            if (ball.cmpTransform.local.translation.x > 21) {
+                scoreLeftPlayer++;
+                
+            }
+            console.log("1");
+            if (ball.cmpTransform.local.translation.x < -21 && !blocked) {
+                scoreRightPlayer++;
+                console.log("2");
+                isBlocked();
+            }
 
-       
+    }
+        if (t1 - t0 > 122)
+                {
+                    blocked = false;
+                    console.log("open" );
+                }
+                else{
+                    console.log("close" + (t1 - t0) );
+                }
+        
 
+
+        let scoreCounterLeftPlayer: HTMLDivElement = <HTMLDivElement> document.getElementById("scoreLeftPlayer");
+        let scoreCounterRightPlayer: HTMLDivElement = <HTMLDivElement> document.getElementById("scoreRightPlayer");
+        scoreCounterLeftPlayer.innerHTML = scoreLeftPlayer.toString();
+        scoreCounterRightPlayer.innerHTML = scoreRightPlayer.toString();
 
         f.RenderManager.update();
         viewport.draw();
+       
+       
     }
+
+    function isBlocked(): void{
+        
+        if (blocked == true)
+                {
+                    t1 = performance.now();
+                    console.log("Call to doSomething took " + (t1 - t0) + " milliseconds.");
+                }
+        t0 = performance.now();
+        blocked = true;
+    }
+
 
     function detectHit(_ballPos: f.Vector3, paddlePos: f.Matrix4x4): boolean {
         let topLeft: f.Vector3 = (new f.Vector3(paddlePos.translation.x - paddlePos.scaling.x, paddlePos.translation.y + paddlePos.scaling.y, 0));
@@ -236,6 +245,21 @@ namespace L04_PongAnimated {
         }
     }
 
+    function KeyboardInput(): void {
+        if (keysPressed[f.KEYBOARD_CODE.ARROW_UP]) 
+            paddleRight.cmpTransform.local.translate(new f.Vector3(0, 0.3, 0));
+        
+        if (keysPressed[f.KEYBOARD_CODE.ARROW_DOWN]) 
+            paddleRight.cmpTransform.local.translate(f.Vector3.Y(-0.3));
+        
+        if (keysPressed[f.KEYBOARD_CODE.W]) 
+            paddleLeft.cmpTransform.local.translate(new f.Vector3(0, 0.3, 0));
+
+        if (keysPressed[f.KEYBOARD_CODE.S]) 
+            paddleLeft.cmpTransform.local.translate(f.Vector3.Y(-0.3));    
+    }
+
+
     function moveBall(): void {
         ball.cmpTransform.local.translate(new f.Vector3(ballSpeed.x, ballSpeed.y, ballSpeed.z));
     }
@@ -243,9 +267,11 @@ namespace L04_PongAnimated {
     function hndKeyup(_event: KeyboardEvent): void {
         keysPressed[_event.code] = false;
     }
+
     function hndKeydown(_event: KeyboardEvent): void {
         keysPressed[_event.code] = true;
     }
+
 
     function createPong(): f.Node {
         let pong: f.Node = new f.Node("Pong");
