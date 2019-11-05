@@ -59,7 +59,8 @@ var PongMaster;
             bounceFromPaddle();
             colorChange(ballColor, rightPlayerColor);
         }
-        if (inPlayerArea(ball.cmpTransform.local.translation, playArea.cmpTransform.local) == false && ball.cmpTransform.local.translation.y > 14 || ball.cmpTransform.local.translation.y < -14) { // ballSpeed.x = ballSpeed.x * Math.random();
+        //if Ball leaves PlayerArea trigger bounce
+        if (!inPlayerArea(ball.cmpTransform.local.translation, playArea.cmpTransform.local)) { // ballSpeed.x = ballSpeed.x * Math.random();
             bounceFromBorder();
         }
         // count Time from last Collision
@@ -183,22 +184,22 @@ var PongMaster;
             isBlocked();
         }
         if (ball.cmpTransform.local.translation.y >= 4 && ball.cmpTransform.local.translation.y < 8 && !bounceblocked) {
-            ballSpeed.x = (ballSpeed.x * 1) * -1;
+            ballSpeed.x = (ballSpeed.x * 1.05) * -1;
             f.Debug.log("Pa1r");
             isBlocked();
         }
         if (ball.cmpTransform.local.translation.y <= -4 && ball.cmpTransform.local.translation.y > -8 && !bounceblocked) {
-            ballSpeed.x = (ballSpeed.x * 1) * -1;
+            ballSpeed.x = (ballSpeed.x * 1.05) * -1;
             f.Debug.log("Pa1l");
             isBlocked();
         }
         if (ball.cmpTransform.local.translation.y >= 8 && ball.cmpTransform.local.translation.y < 12 && !bounceblocked) {
-            ballSpeed.x = (ballSpeed.x * 1.1) * -1;
+            ballSpeed.x = (ballSpeed.x * 1.15) * -1;
             f.Debug.log("Pa2r");
             isBlocked();
         }
         if (ball.cmpTransform.local.translation.y <= -8 && ball.cmpTransform.local.translation.y > -12 && !bounceblocked) {
-            ballSpeed.x = (ballSpeed.x * 1.1) * -1;
+            ballSpeed.x = (ballSpeed.x * 1.15) * -1;
             f.Debug.log("Pa2l");
             isBlocked();
         }
@@ -215,12 +216,12 @@ var PongMaster;
     }
     function bounceFromBorder() {
         if (ball.cmpTransform.local.translation.x >= 0 && ball.cmpTransform.local.translation.x < 7 && !bounceblocked) {
-            ballSpeed.y = (ballSpeed.y * .9) * -1;
+            ballSpeed.y = (ballSpeed.y * .8) * -1;
             f.Debug.log("MitteR");
             isBlocked();
         }
         if (ball.cmpTransform.local.translation.x <= 0 && ball.cmpTransform.local.translation.x > -7 && !bounceblocked) {
-            ballSpeed.y = (ballSpeed.y * .9) * -1;
+            ballSpeed.y = (ballSpeed.y * .8) * -1;
             f.Debug.log("MitteL");
             isBlocked();
         }
@@ -235,22 +236,22 @@ var PongMaster;
             isBlocked();
         }
         if (ball.cmpTransform.local.translation.x >= 14 && ball.cmpTransform.local.translation.x < 21 && !bounceblocked) {
-            ballSpeed.y = (ballSpeed.y * 1.1) * -1;
+            ballSpeed.y = (ballSpeed.y * 1.3) * -1;
             f.Debug.log("a2r");
             isBlocked();
         }
         if (ball.cmpTransform.local.translation.x <= -14 && ball.cmpTransform.local.translation.x > -21 && !bounceblocked) {
-            ballSpeed.y = (ballSpeed.y * 1.1) * -1;
+            ballSpeed.y = (ballSpeed.y * 1.3) * -1;
             f.Debug.log("a2l");
             isBlocked();
         }
         if (ball.cmpTransform.local.translation.x >= 21 && ball.cmpTransform.local.translation.x < 40 && !bounceblocked) {
-            ballSpeed.y = (ballSpeed.y * 1.2) * -1;
+            ballSpeed.y = (ballSpeed.y * 1.5) * -1;
             f.Debug.log("a3r");
             isBlocked();
         }
         if (ball.cmpTransform.local.translation.x <= -21 && ball.cmpTransform.local.translation.x > -40 && !bounceblocked) {
-            ballSpeed.y = (ballSpeed.y * 1.2) * -1;
+            ballSpeed.y = (ballSpeed.y * 1.5) * -1;
             f.Debug.log("a3l");
             isBlocked();
         }
