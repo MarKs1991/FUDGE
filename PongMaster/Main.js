@@ -49,26 +49,15 @@ var PongMaster;
         f.Loop.start();
     }
     function update(_event) {
-        //TesterInput();
         KeyboardInput();
         moveBall();
         if (detectHit(ball.cmpTransform.local.translation, paddleLeft)) {
             bounceFromPaddle();
-            leftPlayerColor.r = Math.random();
-            leftPlayerColor.g = Math.random();
-            leftPlayerColor.b = Math.random();
-            ballColor.r = Math.random();
-            ballColor.g = Math.random();
-            ballColor.b = Math.random();
+            colorChange(ballColor, leftPlayerColor);
         }
         if (detectHit(ball.cmpTransform.local.translation, paddleRight)) {
             bounceFromPaddle();
-            rightPlayerColor.r = Math.random();
-            rightPlayerColor.g = Math.random();
-            rightPlayerColor.b = Math.random();
-            ballColor.r = Math.random();
-            ballColor.g = Math.random();
-            ballColor.b = Math.random();
+            colorChange(ballColor, rightPlayerColor);
         }
         if (inPlayerArea(ball.cmpTransform.local.translation, playArea.cmpTransform.local) == false && ball.cmpTransform.local.translation.y > 14 || ball.cmpTransform.local.translation.y < -14) { // ballSpeed.x = ballSpeed.x * Math.random();
             bounceFromBorder();
@@ -78,14 +67,14 @@ var PongMaster;
         // when goal is touched by ball score +1 and reset Ball to 0,0,0
         if (inPlayerArea(ball.cmpTransform.local.translation, playArea.cmpTransform.local) == false && ball.cmpTransform.local.translation.x > 21 || ball.cmpTransform.local.translation.x < -21) {
             ballSpeed.x = ballSpeed.x * -1;
-            //if RightGoal is hit
+            // if RightGoal is hit
             if (ball.cmpTransform.local.translation.x > 21) {
                 ball.cmpTransform.local.translation = positionZero;
                 scoreLeftPlayer++;
                 ballSpeed = new f.Vector3(0.2, 0.2, 0);
                 directionx = directionx * -1;
             }
-            //if LeftGoal is hit
+            // if LeftGoal is hit
             if (ball.cmpTransform.local.translation.x < -21) {
                 ball.cmpTransform.local.translation = positionZero;
                 scoreRightPlayer++;
@@ -110,7 +99,6 @@ var PongMaster;
     function isBlocked() {
         if (bounceblocked) {
             timerEnd = performance.now();
-            console.log("Call to doSomething took " + (timerEnd - timerStart) + " milliseconds.");
         }
         timerStart = performance.now();
         bounceblocked = true;
@@ -266,6 +254,14 @@ var PongMaster;
             f.Debug.log("a3l");
             isBlocked();
         }
+    }
+    function colorChange(_ballColor, _paddleColor) {
+        _paddleColor.r = Math.random();
+        _paddleColor.g = Math.random();
+        _paddleColor.b = Math.random();
+        ballColor.r = Math.random();
+        ballColor.g = Math.random();
+        ballColor.b = Math.random();
     }
     function moveBall() {
         ball.cmpTransform.local.translate(new f.Vector3(ballSpeed.x * directionx, ballSpeed.y * directionx, ballSpeed.z));

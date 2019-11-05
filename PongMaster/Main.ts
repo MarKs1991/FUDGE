@@ -53,7 +53,7 @@ namespace PongMaster {
 
         paddleLeft.getComponent(f.ComponentMesh).pivot.scaleY(6);
         paddleRight.getComponent(f.ComponentMesh).pivot.scaleY(6);
-        
+
         // playArea.cmpTransform.local.translateX();
         playArea.cmpTransform.local.translation = new f.Vector3(0, 0, 0);
         playArea.cmpTransform.local.scaling.x = 21;
@@ -77,34 +77,21 @@ namespace PongMaster {
         f.Loop.start();
     }
 
-    function update(_event: Event): void {
-       
-        //TesterInput();
+    function update(_event: Event): void { // TesterInput();
+
         KeyboardInput();
         moveBall();
+
         if (detectHit(ball.cmpTransform.local.translation, paddleLeft)) {
 
             bounceFromPaddle();
-            leftPlayerColor.r = Math.random();
-            leftPlayerColor.g = Math.random();
-            leftPlayerColor.b = Math.random();
-
-            ballColor.r = Math.random();
-            ballColor.g = Math.random();
-            ballColor.b = Math.random();
+            colorChange(ballColor, leftPlayerColor);
         }
 
 
-       
         if (detectHit(ball.cmpTransform.local.translation, paddleRight)) {
             bounceFromPaddle();
-            rightPlayerColor.r = Math.random();
-            rightPlayerColor.g = Math.random();
-            rightPlayerColor.b = Math.random();
-
-            ballColor.r = Math.random();
-            ballColor.g = Math.random();
-            ballColor.b = Math.random();
+            colorChange(ballColor, rightPlayerColor);
         }
 
         if (inPlayerArea(ball.cmpTransform.local.translation, playArea.cmpTransform.local) == false && ball.cmpTransform.local.translation.y > 14 || ball.cmpTransform.local.translation.y < -14) { // ballSpeed.x = ballSpeed.x * Math.random();
@@ -118,29 +105,26 @@ namespace PongMaster {
         if (inPlayerArea(ball.cmpTransform.local.translation, playArea.cmpTransform.local) == false && ball.cmpTransform.local.translation.x > 21 || ball.cmpTransform.local.translation.x < -21) {
             ballSpeed.x = ballSpeed.x * - 1;
 
-            //if RightGoal is hit
+            // if RightGoal is hit
             if (ball.cmpTransform.local.translation.x > 21) {
-               
+
                 ball.cmpTransform.local.translation = positionZero;
                 scoreLeftPlayer++;
                 ballSpeed = new f.Vector3(0.2, 0.2, 0);
                 directionx = directionx * -1;
-                
             }
-            //if LeftGoal is hit
+            // if LeftGoal is hit
             if (ball.cmpTransform.local.translation.x < -21) {
-                
+
                 ball.cmpTransform.local.translation = positionZero;
                 scoreRightPlayer++;
                 ballSpeed = new f.Vector3(0.2, 0.2, 0);
-                
-                
             }
         }
         // if counted Time and therefore last Collsion is 0.2 secs in the Past then release bounceBlock
         if (timerEnd - timerStart >= 50) {
             bounceblocked = false;
-           
+
             // console.log("open" );
         }
         if (timerEnd - timerStart < 50) {
@@ -159,10 +143,7 @@ namespace PongMaster {
     function isBlocked(): void {
 
         if (bounceblocked) {
-            timerEnd = performance.now();
-            console.log("Call to doSomething took " + (
-                timerEnd - timerStart
-            ) + " milliseconds.");
+            timerEnd = performance.now();          
         }
 
         timerStart = performance.now();
@@ -189,11 +170,6 @@ namespace PongMaster {
         }
     }
 
-              
-    
-
-        
-    
 
     function inPlayerArea(_ballPos: f.Vector3, paddlePos: f.Matrix4x4): boolean {
         let topLeft: f.Vector3 = (new f.Vector3(paddlePos.translation.x - paddlePos.scaling.x, paddlePos.translation.y + paddlePos.scaling.y, 0));
@@ -258,7 +234,6 @@ namespace PongMaster {
     }
 
 */
-
     function bounceFromPaddle(): void {
         if (ball.cmpTransform.local.translation.y >= 0 && ball.cmpTransform.local.translation.y < 4 && ! bounceblocked) {
             ballSpeed.x = (ballSpeed.x * .9) * - 1;
@@ -302,6 +277,7 @@ namespace PongMaster {
         }
     }
 
+
     function bounceFromBorder(): void {
         if (ball.cmpTransform.local.translation.x >= 0 && ball.cmpTransform.local.translation.x < 7 && ! bounceblocked) {
             ballSpeed.y = (ballSpeed.y * .9) * - 1;
@@ -343,6 +319,16 @@ namespace PongMaster {
             f.Debug.log("a3l");
             isBlocked();
         }
+    }
+
+    function colorChange(_ballColor: f.Color, _paddleColor: f.Color): void {
+        _paddleColor.r = Math.random();
+        _paddleColor.g = Math.random();
+        _paddleColor.b = Math.random();
+
+        ballColor.r = Math.random();
+        ballColor.g = Math.random();
+        ballColor.b = Math.random();
     }
 
     function moveBall(): void {
