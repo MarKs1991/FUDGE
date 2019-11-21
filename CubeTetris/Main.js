@@ -17,11 +17,16 @@ var PongMaster;
     let orangeRicky = new f.Node("orangeRicky");
     let stableL = new f.Node("orangeRicky");
     let cornerBlock = new f.Node("cornerBlock");
+    let blockMatrix;
+    let playArea;
     function hndLoad(_event) {
         const canvas = document.querySelector("canvas");
         f.RenderManager.initialize();
         f.Debug.log(canvas);
         let pong = createCubeTetris();
+        f.Debug.log(blockMatrix);
+        f.Debug.log(playArea);
+        updateFragmentPosition();
         let cmpCamera = new f.ComponentCamera();
         cmpCamera.pivot.translation = new f.Vector3(-8, 8, 35);
         cmpCamera.pivot.rotateX(-20);
@@ -38,6 +43,7 @@ var PongMaster;
     }
     function update(_event) {
         TesterInput();
+        cleveland.cmpTransform.local.translateX(1);
         f.RenderManager.update();
         viewport.draw();
     }
@@ -54,6 +60,7 @@ var PongMaster;
         }
         if (keysPressed[f.KEYBOARD_CODE.R]) {
             heroBlock.cmpTransform.local.rotateZ(90);
+            rotateFragmentMatrix();
             f.Debug.log(heroBlock);
             keysPressed[f.KEYBOARD_CODE.R] = false;
         }
@@ -67,7 +74,8 @@ var PongMaster;
     }
     function createCubeTetris() {
         let CubeTetris = new f.Node("CubeTetris");
-        //==========================================
+        initializePlayAreaMatrix();
+        // ==========================================
         let heroBlockPosArray = [
             new f.Vector3(2, 0, 0),
             new f.Vector3(2, 1, 0),
@@ -76,7 +84,7 @@ var PongMaster;
         ];
         heroBlock = createBlock(heroBlockPosArray, heroBlock);
         CubeTetris.appendChild(heroBlock);
-        //==========================================
+        // ==========================================
         let rodeIslandBlockPosArray = [
             new f.Vector3(2, 0, 0),
             new f.Vector3(2, 1, 0),
@@ -85,7 +93,7 @@ var PongMaster;
         ];
         rodeIsland = createBlock(rodeIslandBlockPosArray, rodeIsland);
         CubeTetris.appendChild(rodeIsland);
-        //==========================================
+        // ==========================================
         let clevelandBlockPosArray = [
             new f.Vector3(2, 0, 0),
             new f.Vector3(2, 1, 0),
@@ -94,7 +102,7 @@ var PongMaster;
         ];
         cleveland = createBlock(clevelandBlockPosArray, cleveland);
         CubeTetris.appendChild(cleveland);
-        //==========================================
+        // ==========================================
         let smasherBlockPosArray = [
             new f.Vector3(2, 0, 0),
             new f.Vector3(2, 1, 0),
@@ -103,7 +111,7 @@ var PongMaster;
         ];
         smasher = createBlock(smasherBlockPosArray, smasher);
         CubeTetris.appendChild(smasher);
-        //==========================================
+        // ==========================================
         let smasher3dBlockPosArray = [
             new f.Vector3(2, 0, 0),
             new f.Vector3(2, 1, 0),
@@ -116,7 +124,7 @@ var PongMaster;
         ];
         smasher3d = createBlock(smasher3dBlockPosArray, smasher3d);
         CubeTetris.appendChild(smasher3d);
-        //==========================================
+        // ==========================================
         let blueRickyBlockPosArray = [
             new f.Vector3(2, 0, 0),
             new f.Vector3(2, 1, 0),
@@ -125,7 +133,7 @@ var PongMaster;
         ];
         blueRicky = createBlock(blueRickyBlockPosArray, blueRicky);
         CubeTetris.appendChild(blueRicky);
-        //==========================================
+        // ==========================================
         let orangeRickyBlockPosArray = [
             new f.Vector3(2, 0, 0),
             new f.Vector3(2, 1, 0),
@@ -134,16 +142,17 @@ var PongMaster;
         ];
         orangeRicky = createBlock(orangeRickyBlockPosArray, orangeRicky);
         CubeTetris.appendChild(orangeRicky);
-        //==========================================
+        // ==========================================
         let stableLBlockPosArray = [
-            new f.Vector3(2, 0, 0), new f.Vector3(2, 1, 0),
+            new f.Vector3(2, 0, 0),
+            new f.Vector3(2, 1, 0),
             new f.Vector3(2, 2, 0),
             new f.Vector3(1, 2, 0),
             new f.Vector3(0, 2, 0)
         ];
         stableL = createBlock(stableLBlockPosArray, stableL);
         CubeTetris.appendChild(stableL);
-        //==========================================
+        // ==========================================
         let cornerBlockPosArray = [
             // new f.Vector3(2, 0, 0),
             new f.Vector3(2, 0, 1),
@@ -154,7 +163,7 @@ var PongMaster;
         ];
         cornerBlock = createBlock(cornerBlockPosArray, cornerBlock);
         CubeTetris.appendChild(cornerBlock);
-        //==========================================
+        // ==========================================
         heroBlock.cmpTransform.local.translation = new f.Vector3(4, 0, 0);
         rodeIsland.cmpTransform.local.translation = new f.Vector3(-16, 0, 0);
         cleveland.cmpTransform.local.translation = new f.Vector3(-12, 0, 0);
@@ -167,10 +176,46 @@ var PongMaster;
         cornerBlock.cmpTransform.local.rotateY(90);
         return CubeTetris;
     }
-    //custom BlockGenerator
+    function rotateFragmentMatrix() {
+        let rotateMatrix = blockMatrix;
+        for (let i = 0; i < 4; i++) {
+            for (let j = 0; j < 4; j++) {
+                for (let k = 0; k < 4; k++) {
+                    rotateMatrix[i][k][j] = blockMatrix[i][j][k];
+                }
+            }
+        }
+        f.Debug.log(rotateMatrix);
+    }
+    function updateFragmentPosition() {
+        let currentPosX = 8;
+        let currentPosY = 8;
+        let currentPosZ = 8;
+        for (let i = currentPosX; i < currentPosX + 4; i++) {
+            for (let j = currentPosY; j < currentPosY + 4; j++) {
+                for (let k = currentPosZ; k < currentPosZ + 4; k++) {
+                    playArea[i][j][k] = blockMatrix[i - currentPosX][j - currentPosY][k - currentPosZ];
+                }
+            }
+        }
+        f.Debug.log(playArea);
+    }
+    function initializePlayAreaMatrix() {
+        playArea = [];
+        for (let i = 0; i < 20; i++) {
+            playArea[i] = [];
+            for (let j = 0; j < 20; j++) {
+                playArea[i][j] = [];
+                for (let k = 0; k < 20; k++) {
+                    playArea[i][j][k] = 0;
+                }
+            }
+        }
+        playArea[10][10][10] = 1;
+    }
+    // custom BlockGenerator
     function createBlock(blockPosArray, blockRoot) {
         blockRoot.addComponent(new f.ComponentTransform());
-        let blockMatrix;
         blockMatrix = [];
         for (let i = 0; i < 4; i++) {
             blockMatrix[i] = [];
